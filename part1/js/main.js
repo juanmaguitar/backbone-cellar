@@ -1,12 +1,27 @@
 // Models
-window.Wine = Backbone.Model.extend();
 
-window.WineCollection = Backbone.Collection.extend({
+var App = {
+	views : {},
+	collections: {}
+};
+
+// Model Definition 
+var Wine = Backbone.Model.extend();
+
+// Collection Definition 
+var WineCollection = Backbone.Collection.extend({
     model:Wine,
     url:"../api/wines"
 });
 
-window.WineListView = Backbone.View.extend({
+// ----- VIEWS ------------------------------------------------------------------------ 
+
+/**
+ * WineListView : Wine List (UL)
+ * ex --> new WineListView({model:this.wineList});
+ */
+ 
+var WineListView = Backbone.View.extend({
 
     tagName:'ul',
 
@@ -15,30 +30,62 @@ window.WineListView = Backbone.View.extend({
     },
 
     render:function (eventName) {
-        _.each(this.model.models, function (wine) {
-            $(this.el).append(new WineListItemView({model:wine}).render().el);
+    
+    	var oCollection = this.model.models;
+    	var oBaseElement = this.el // tagName:'ul'... created on the fly
+    	var oCurrentWine = null; 
+    	
+    	// For each element of the collection (wine)
+    	// ... i create a LI with the info and append it to the UL
+        _.each(oCollection, function (wine) {
+        
+        	// oCurrentWine: a view of this current wine
+        	oCurrentWine = new WineListItemView({ model:wine });
+        	
+        	// oCurrentWineElement: a DOM element (LI) of this current wine
+        	oCurrentWineElement = oCurrentWine.render().el;
+        	
+        	// append LI's to UL
+            $(oBaseElement).append(oCurrentWineElement);
+            
         }, this);
+        
+        // return this so this method can be chained
         return this;
     }
 
 });
 
-
-// Views
-window.WineListItemView = Backbone.View.extend({
+/**
+ * WineListItemView : Wine Element (LI)
+ * ex --> new WineListItemView({ model:wine });
+ */
+ 
+var WineListItemView = Backbone.View.extend({
 
     tagName:"li",
 
-    template:_.template($('#tpl-wine-list-item').html()),
+    template:_.template( $('#tpl-wine-list-item').html() ),
 
     render:function (eventName) {
-        $(this.el).html(this.template(this.model.toJSON()));
+    
+    	var sWineJsonData = this.model.toJSON();
+    	var sHtmlTemplate = this.template(sWineJsonData);
+    	var oBaseElement = this.el // tagName:'li'... created on the fly
+    	
+        $(oBaseElement).html(sHtmlTemplate);
+        
         return this;
     }
 
 });
 
-window.WineView = Backbone.View.extend({
+/**
+ * WineItemDetails : Wine Element Details (LI)
+ * ex --> new WineListItemView({ model:wine });
+ */
+ 
+var WineView = Backbone.View.extend({
 
     template:_.template($('#tpl-wine-details').html()),
 
