@@ -2,7 +2,12 @@
 <html>
 <head>
 <title>Backbone Cellar</title>
-<link rel="stylesheet" href="../css/styles.css" />
+	<link rel="stylesheet" href="../css/styles.css" />
+
+	<style type="text/css">
+		div#sidebar, div { overflow: hidden; }
+		li.selected a { background-color: #000;	color: #FFF; }
+	</style>
 </head>
 
 <body>
@@ -18,37 +23,47 @@
 		<p>This is a sample application part of of three-part tutorial showing how to build a CRUD application with Backbone.js.</p>
 	</div>
 
-	<!----------------- TEMPLATES ---------------  -->
+	<!-- ___________________ TEMPLATES _________________________________________ -->
 	
-		<!-- ---------------  tpl-wine-list-item --------------- -->
+		<!-- ___________________  tpl-wine-list-item ___________________ -->
+
 		<script type="text/template" id="tpl-wine-list-item">
-			<a href='#wines/<%= id %>'><%= name %></a>
+			<a href='#wines/{{ id }}'>{{ name }}</a>
 		</script>
 		
-		<!-- ---------------  tpl-wine-details --------------- -->
+		<!-- ___________________  tpl-wine-details ___________________ -->
+
 		<script type="text/template" id="tpl-wine-details">
+
 		    <div class="form-left-col">
 		        <label>Id:</label>
-		        <input type="text" id="wineId" name="id" value="<%= id %>" disabled />
+		        <input type="text" id="wineId" name="id" value="{{ id }}" disabled />
+
 		        <label>Name:</label>
-		        <input type="text" id="name" name="name" value="<%= name %>" required/>
+		        <input type="text" id="name" name="name" value="{{ name }}" required/>
+
 		        <label>Grapes:</label>
-		        <input type="text" id="grapes" name="grapes" value="<%= grapes %>"/>
+		        <input type="text" id="grapes" name="grapes" value="{{ grapes }}"/>
+
 		        <label>Country:</label>
-		        <input type="text" id="country" name="country" value="<%= country %>"/>
+		        <input type="text" id="country" name="country" value="{{ country }}"/>
+
 		        <label>Region:</label>
-		        <input type="text" id="region" name="region"  value="<%= region %>"/>
+		        <input type="text" id="region" name="region"  value="{{ region }}"/>
+
 		        <label>Year:</label>
-		        <input type="text" id="year" name="year"  value="<%= year %>"/>
+		        <input type="text" id="year" name="year"  value="{{ year }}"/>
 		    </div>
+
 		    <div class="form-right-col">
-		        <img height="300" src="../pics/<%= picture %>"/>
+		        <img height="300" src="../pics/{{ picture }}"/>
 		        <label>Notes:</label>
-		        <textarea id="description" name="description"><%= description %></textarea>
+		        <textarea id="description" name="description">{{ description }}</textarea>
 		    </div>
+
 		</script>
 	
-	<!-- --------------- --------------- --------------- ---------------  -->
+	<!-- __________________________________________________________________________________  -->
 	
 	<!-- JavaScript -->
 	<script src="../lib/jquery-1.7.1.min.js"></script>
