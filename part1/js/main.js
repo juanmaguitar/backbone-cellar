@@ -1,8 +1,7 @@
-// Models
-
 var WineApp = (function(){
 
-    var oApp = null; // This will contain the App that we'll return
+    // oApp will contain the whole App that we'll return to WineApp
+    var oApp = null;
     
     var WineModel = null; 
     var WineCollection = null; 
@@ -13,32 +12,30 @@ var WineApp = (function(){
 
     var WineAppRouter = null;
 
-    // http://japhr.blogspot.com/2011/10/underscorejs-templates-in-backbonejs.html
+    // We can use more intuitive characters like `{{ }}` for 
+    // [underscrore js templates in backbone](http://japhr.blogspot.com/2011/10/underscorejs-templates-in-backbonejs.html) 
     _.templateSettings = {
         interpolate : /\{\{([\s\S]+?)\}\}/g
     };
 
-    // ----- MODELS ------------------------------------------------------------------------ 
-
-    // Model Definition 
+    // ###WineModel
+    // Model Definition. Represents a Wine 
     WineModel = Backbone.Model.extend();
 
-
-    // ----- COLLECTION  ------------------------------------------------------------------------ 
-
-    // Collection Definition 
+    // ###WineCollection
+    // Collection of `WineModel`. Represents the list of wines
     WineCollection = Backbone.Collection.extend({
         model: WineModel,
+        // set the REST API url
         url: "http://projects/BACKBONE/backbone-cellar/api/wines"
     });
 
-    // ----- VIEWS ------------------------------------------------------------------------ 
-
-    /**
-     * WineListView : Wine List (UL)
-     * ex --> new WineListView({model:this.wineList});
-     */
-     
+     // ###WineListView
+     // Wine List (UL)   
+     // instance: `new WineListView({ model:this.wineList })     
+     //        
+     // ![HTML code generated](img/UL_WineListView.jpg "List of Wines")
+      
     WineListView = Backbone.View.extend({
 
         tagName:'ul',
@@ -50,17 +47,18 @@ var WineApp = (function(){
         render:function (eventName) {
         
         	var oCollection = this.model.models;
-        	var oElementBase = this.el // tagName:'ul'... created on the fly
+            // `oElementBase` tagName 'UL' that will be created on the fly
+        	var oElementBase = this.el 
         	var oViewCurrentWine = null; 
         	
         	// For each element of the collection (wine)
-        	// ... i create a LI with the info and append it to the UL
+        	// i create a LI with the info and append it to the UL
             _.each( oCollection, function (wine) {
             
-            	// oCurrentWine: a view of this current wine
+            	// `oViewCurrentWine` a view of this current wine
             	oViewCurrentWine = new WineListItemView({ model:wine });
             	
-            	// oCurrentWineElement: a DOM element (LI) of this current wine
+            	// `oCurrentWineElement` a DOM element (LI) of this current wine
             	oCurrentWineElement = oViewCurrentWine.render().el;
             	
             	// append LI's to UL
@@ -68,16 +66,17 @@ var WineApp = (function(){
                 
             }, this);
             
-            // return this so this method can be chained
+            // return `this` so this method can be chained
             return this;
         }
 
     });
 
-    /**
-     * WineListItemView : Wine Element (LI)
-     * ex --> new WineListItemView({ model:wine });
-     */
+    // ###WineListItemView
+    // Wine Element (LI) of the list    
+    // instance: `new WineListItemView({ model:wine })`
+    //        
+    // ![HTML code generated](img/LI_WineListItemView.jpg "Item in the List of Wines")
      
     var WineListItemView = Backbone.View.extend({
 
@@ -85,23 +84,22 @@ var WineApp = (function(){
 
         template:_.template( $('#tpl-wine-list-item').html() ),
 
+        // set events for clicks in links so we can mark the current selection
         events: {
             "click a": "markSelection"
         },
 
         markSelection: function(eEvent) {
-
             var oElement = eEvent.target.parentNode;
-
             $(oElement).addClass("selected").siblings().removeClass("selected");
-
         },
 
         render:function (eventName) {
         
         	var oJsonWineData = this.model.toJSON();
         	var sHtmlTemplate = this.template(oJsonWineData);
-        	var oElementBase = this.el // tagName:'li'... created on the fly
+            // `oElementBase` tagName 'LI' that will be created on the fly
+        	var oElementBase = this.el 
         	
             $(oElementBase).html(sHtmlTemplate);
             
@@ -110,11 +108,12 @@ var WineApp = (function(){
 
     });
 
-    /**
-     * WineItemDetails : Wine Element Details (LI)
-     * ex --> new WineListItemView({ model:wine });
-     */
-     
+    // ###WineItemDetails
+    // Show Data of every wine through `tpl-wine-details` template    
+    // instance: `new WineListItemView({ model:wine });`
+    //        
+    // ![HTML code generated](img/DIV_WineItemDetails.jpg "Details of Wine")
+
     WineView = Backbone.View.extend({
 
         template:_.template($('#tpl-wine-details').html()),
@@ -132,22 +131,29 @@ var WineApp = (function(){
 
     });
 
-    // ----- ROUTER ------------------------------------------------------------------------ 
-
-    /**
-     * WineAppRouter: Entry points of our app
-     */
-
+    // ###WineAppRouter
+    // Entry points of our app    
+    // instance: `new WineAppRouter();`
     WineAppRouter = Backbone.Router.extend({
 
-        wineList : null, // Collection
-        wineListView : null, // View List
+        // `wineList` *Collection* of wines
+        wineList : null, 
+        // `wineListView` *View* with the list of wines
+        wineListView : null, 
 
-        wine : null, // Model (Unique Wine)
-        wineView : null, // View Detail
+        // `wine` *Model* representing an unique wWine
+        wine : null, 
+        // `wineView` *View* with the details of the wine
+        wineView : null, 
 
+        // we set what to do in our app URL's
         routes:{
+            // at `http:\\our_app_url\` we call to `this.list` method 
+            // and show the list of wines
             "": "list",
+            
+            // for example at `http:\\our_app_url\#wines\3` we call to `this.wineDetails` method
+            // and show the details of wine with id=3
             "wines/:id": "wineDetails"
         },
 
