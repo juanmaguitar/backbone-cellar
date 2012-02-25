@@ -26,7 +26,7 @@ var WineApp = (function(){
     // Collection of `WineModel`. Represents the list of wines
     WineCollection = Backbone.Collection.extend({
         model: WineModel,
-        // set the REST API url
+        // set the RESTful service API url
         url: "http://projects/BACKBONE/backbone-cellar/api/wines"
     });
 
@@ -84,14 +84,32 @@ var WineApp = (function(){
 
         template:_.template( $('#tpl-wine-list-item').html() ),
 
-        // set events for clicks in links so we can mark the current selection
-        events: {
-            "click a": "markSelection"
+        initialize: function() {
+            this.model.bind("change:selected", this.markSelection, this);
         },
 
-        markSelection: function(eEvent) {
-            var oElement = eEvent.target.parentNode;
-            $(oElement).addClass("selected").siblings().removeClass("selected");
+        events: {
+            "click a": "setSelection"
+        },
+
+        setSelection: function () {
+
+            var aCollection = this.model.collection.models;
+
+            _.each( aCollection, function (wine) {
+                wine.set({ selected:false });
+            });
+
+            this.model.set({ selected:true });
+                       
+        },
+
+        markSelection: function( wine, selected) {
+
+            var oElement = this.el;
+            var sClassSelected = selected ? "selected" : "";
+
+            $(oElement).attr("class",sClassSelected);
         },
 
         render:function (eventName) {
