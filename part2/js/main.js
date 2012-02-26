@@ -1,181 +1,406 @@
-// Models
-window.Wine = Backbone.Model.extend({
-    urlRoot:"../api/wines",
-    defaults:{
-        "id":null,
-        "name":"",
-        "grapes":"",
-        "country":"USA",
-        "region":"California",
-        "year":"",
-        "description":"",
-        "picture":""
-    }
-});
+var WineApp = (function(){
 
-window.WineCollection = Backbone.Collection.extend({
-    model:Wine,
-    url:"../api/wines"
-});
+    // oApp will contain the whole App that we'll return to WineApp
+    var oApp = null;
+    
+    var WineModel = null; 
+    var WineCollection = null; 
+
+    var WineListView = null;
+    var WineListItemView = null;
+    var WineView = null;
+    var WineHeaderView = null;
+
+    var WineAppRouter = null;
+
+    // We can use more intuitive characters like `{{ }}` for 
+    // [underscrore js templates in backbone](http://japhr.blogspot.com/2011/10/underscorejs-templates-in-backbonejs.html) 
+    _.templateSettings = {
+        interpolate : /\{\{([\s\S]+?)\}\}/g
+    };
 
 
-// Views
-window.WineListView = Backbone.View.extend({
+    // ###WineModel
+    // Model Definition. Represents a Wine 
+    WineModel = Backbone.Model.extend({
 
-    tagName:'ul',
-
-    initialize:function () {
-        this.model.bind("reset", this.render, this);
-        var self = this;
-        this.model.bind("add", function (wine) {
-            $(self.el).append(new WineListItemView({model:wine}).render().el);
-        });
-    },
-
-    render:function (eventName) {
-        _.each(this.model.models, function (wine) {
-            $(this.el).append(new WineListItemView({model:wine}).render().el);
-        }, this);
-        return this;
-    }
-});
-
-window.WineListItemView = Backbone.View.extend({
-
-    tagName:"li",
-
-    template:_.template($('#tpl-wine-list-item').html()),
-
-    initialize:function () {
-        this.model.bind("change", this.render, this);
-        this.model.bind("destroy", this.close, this);
-    },
-
-    render:function (eventName) {
-        $(this.el).html(this.template(this.model.toJSON()));
-        return this;
-    },
-
-    close:function () {
-        $(this.el).unbind();
-        $(this.el).remove();
-    }
-});
-
-window.WineView = Backbone.View.extend({
-
-    template:_.template($('#tpl-wine-details').html()),
-
-    initialize:function () {
-        this.model.bind("change", this.render, this);
-    },
-
-    render:function (eventName) {
-        $(this.el).html(this.template(this.model.toJSON()));
-        return this;
-    },
-
-    events:{
-        "change input":"change",
-        "click .save":"saveWine",
-        "click .delete":"deleteWine"
-    },
-
-    change:function (event) {
-        var target = event.target;
-        console.log('changing ' + target.id + ' from: ' + target.defaultValue + ' to: ' + target.value);
-        // You could change your model on the spot, like this:
-        // var change = {};
-        // change[target.name] = target.value;
-        // this.model.set(change);
-    },
-
-    saveWine:function () {
-        this.model.set({
-            name:$('#name').val(),
-            grapes:$('#grapes').val(),
-            country:$('#country').val(),
-            region:$('#region').val(),
-            year:$('#year').val(),
-            description:$('#description').val()
-        });
-        if (this.model.isNew()) {
-            app.wineList.create(this.model);
-        } else {
-            this.model.save();
+        // RESTful service endpoint to retrieve or persist Model data. 
+        // Note that this attribute is only needed when retrieving/persisting Models 
+        // that are not part of a Collection. If the Model is part of a Collection, 
+        // the url attribute defined in the Collection is enough for Backbone.js to 
+        // know how to retrieve, update, or delete data using your RESTful API.
+        urlRoot: "http://projects/BACKBONE/backbone-cellar/api/wines",
+        defaults: {
+            "id": null,
+            "name": "",
+            "grapes": "",
+            "country": "USA",
+            "region": "California",
+            "year": "",
+            "description": "",
+            "picture": "Reserva.jpg"
         }
-        return false;
-    },
+    });
 
-    deleteWine:function () {
-        this.model.destroy({
-            success:function () {
-                alert('Wine deleted successfully');
-                window.history.back();
+
+    // ###WineCollection
+    // Collection of `WineModel`. Represents the list of wines
+    WineCollection = Backbone.Collection.extend({
+        model: WineModel,
+        // set the RESTful service API url
+        url: "http://projects/BACKBONE/backbone-cellar/api/wines"
+    });
+
+
+    // ###WineListView
+    // Wine List (UL)   
+    // instance: `new WineListView({ model:this.wineList })     
+    //        
+    // ![HTML code generated](img/UL_WineListView.jpg "List of Wines")
+      
+    WineListView = Backbone.View.extend({
+
+        tagName:'ul',
+
+        initialize:function () {
+
+            _.bindAll(this, 'render', 'addWine');
+            this.model.bind("reset", this.render);
+            this.model.bind("add", this.addWine) 
+        },
+
+        addWine: function (wine) {
+            
+            var oViewItemWine = new WineListItemView({ model:wine });
+            var oViewItemWineHTML = oViewItemWine.render().el;
+            var oElementBase = this.el;
+
+            $(oElementBase).append(oViewItemWineHTML);
+
+        },
+
+        render: function (eventName) {
+        
+            var oCollection = this.model.models;
+            // `oElementBase` tagName 'UL' that will be created on the fly
+            var oElementBase = this.el 
+            var oViewCurrentWine = null; 
+            
+            // For each element of the collection (wine)
+            // i create a LI with the info and append it to the UL
+            _.each( oCollection, function (wine) {
+            
+                // `oViewCurrentWine` a view of this current wine
+                oViewCurrentWine = new WineListItemView({ model:wine });
+                
+                // `oCurrentWineElement` a DOM element (LI) of this current wine
+                oCurrentWineElement = oViewCurrentWine.render().el;
+                
+                // append LI's to UL
+                $(oElementBase).append( oCurrentWineElement );
+                
+            }, this);
+            
+            // return `this` so this method can be chained
+            return this;
+        }
+
+    });
+
+    // ###WineListItemView
+    // Wine Element (LI) of the list    
+    // instance: `new WineListItemView({ model:wine })`
+    //        
+    // ![HTML code generated](img/LI_WineListItemView.jpg "Item in the List of Wines")
+     
+    var WineListItemView = Backbone.View.extend({
+
+        tagName:"li",
+
+        template:_.template( $('#tpl-wine-list-item').html() ),
+
+        initialize: function() {
+            _.bindAll(this, 'render', 'close', "markSelection");
+            this.model.bind("change", this.render);
+            this.model.bind("destroy", this.close);
+            this.model.bind("change:selected", this.markSelection);
+        },
+
+        events: {
+            "click a": "setSelection"
+        },
+
+        setSelection: function () {
+
+            var aCollection = this.model.collection.models;
+
+            _.each( aCollection, function (wine) {
+                wine.set({ selected:false });
+            });
+
+            this.model.set({ selected:true });
+                       
+        },
+
+        markSelection: function( wine, selected) {
+
+            var oElement = this.el;
+            var sClassSelected = selected ? "selected" : "";
+
+            $(oElement).attr("class",sClassSelected);
+        },
+
+        render:function (eventName) {
+        
+            var oJsonWineData = this.model.toJSON();
+            var sHtmlTemplate = this.template(oJsonWineData);
+            // `oElementBase` tagName 'LI' that will be created on the fly
+            var oElementBase = this.el 
+            
+            $(oElementBase).html(sHtmlTemplate);
+            
+            return this;
+        },
+
+        close: function() {
+            
+            // `this.el here represents a DOM selection of the LI
+            var oElement = this.el;
+            
+            // unbind of all events attached to this LI (this.events)
+            $(oElement).unbind();
+            // remove the element (from the list)
+            $(oElement).remove();
+
+        }
+
+    });
+
+    // ###WineItemDetails
+    // Show Data of every wine through `tpl-wine-details` template    
+    // instance: `new WineListItemView({ model:wine });`
+    //        
+    // ![HTML code generated](img/DIV_WineItemDetails.jpg "Details of Wine")
+
+    WineView = Backbone.View.extend({
+
+        template:_.template($('#tpl-wine-details').html()),
+
+        initialize:function () {
+            this.model.bind("change", this.render, this);
+        },
+    
+        events:{
+            "change input": "change",
+            "click .save": "saveWine",
+            "click .delete": "deleteWine"
+        },
+
+        render:function (eventName) {
+
+            var oJsonWineData = this.model.toJSON();
+            var sHtmlTemplate = this.template( oJsonWineData );
+            var oElementBase = this.el;
+
+            $(oElementBase).html(sHtmlTemplate);
+
+            return this;
+        },
+
+        change:function ( eEvent) {
+
+            var oInput = eEvent.target;
+
+            // You could change your model on the spot, like this:     
+            // `var change = {};`    
+            // `change[target.name] = target.value`;    
+            // `this.model.set(change);`    
+            console.log('changing ' + oInput.id + ' from: ' + oInput.defaultValue + ' to: ' + oInput.value);
+
+        },
+
+        saveWine:function () {
+
+            var bIsNew = false;
+            var oAppCollection = oApp.wineList;
+            var oCurrentModel  = this.model;
+
+            oCurrentModel.set({
+                name: $('#name').val(),
+                grapes: $('#grapes').val(),
+                country: $('#country').val(),
+                region: $('#region').val(),
+                year: $('#year').val(),
+                description: $('#description').val()
+            });
+
+            // We can check if the model has been saved to the server with 
+            // [model.isNew()](http://documentcloud.github.com/backbone/#Model-isNew) 
+            bIsNew = oCurrentModel.isNew();
+
+            // With this method we can SAVE new wines or UPDATE existing ones
+            if (bIsNew) {
+                // Add this model (wine) to the collection created in App
+                oAppCollection.create( this.model );
+            } 
+            else {
+                // Update current model (this.model)
+                oCurrentModel.save();
             }
-        });
-        return false;
-    },
+            return false;
+        },
 
-    close:function () {
-        $(this.el).unbind();
-        $(this.el).empty();
-    }
-});
+        deleteWine:function () {
 
-window.HeaderView = Backbone.View.extend({
+            var oCurrentModel  = this.model;
 
-    template:_.template($('#tpl-header').html()),
+            oCurrentModel.destroy({
+                success:function () {
+                    alert('Wine deleted successfully');
+                    window.history.back();
+                }
+            });
+            return false;
+        },
 
-    initialize:function () {
-        this.render();
-    },
+        close:function () {
+            // this.el here represents a DOM selection of the DIV
+            // showing the details of wine
+            var oElement = this.el;
+            
+            // unbind of all events attached
+            $(oElement).unbind();
+            // clean the content of the element
+            $(oElement).empty();
+            
+        }
 
-    render:function (eventName) {
-        $(this.el).html(this.template());
-        return this;
-    },
+    });
 
-    events:{
-        "click .new":"newWine"
-    },
+    // ###WineItemDetails
+    // Show Data of every wine through `tpl-wine-details` template    
+    // instance: `new WineListItemView({ model:wine });`
+    //        
+    // ![HTML code generated](img/DIV_WineItemDetails.jpg "Details of Wine")
 
-    newWine:function (event) {
-        if (app.wineView) app.wineView.close();
-        app.wineView = new WineView({model:new Wine()});
-        $('#content').html(app.wineView.render().el);
-        return false;
-    }
-});
+    HeaderView = Backbone.View.extend({
 
+        template:_.template($('#tpl-header').html()),
 
-// Router
-var AppRouter = Backbone.Router.extend({
+        initialize:function () {
+            this.render();
+        },
 
-    routes:{
-        "":"list",
-        "wines/:id":"wineDetails"
-    },
+        render:function (eventName) {
 
-    initialize:function () {
-        $('#header').html(new HeaderView().render().el);
-    },
+            var sHtmlTemplate = this.template();
+            var oElementBase = this.el;
 
-    list:function () {
-        this.wineList = new WineCollection();
-        this.wineListView = new WineListView({model:this.wineList});
-        this.wineList.fetch();
-        $('#sidebar').html(this.wineListView.render().el);
-    },
+            $(oElementBase).html(sHtmlTemplate);
 
-    wineDetails:function (id) {
-        this.wine = this.wineList.get(id);
-        if (app.wineView) app.wineView.close();
-        this.wineView = new WineView({model:this.wine});
-        $('#content').html(this.wineView.render().el);
-    }
+            return this;
 
-});
+        },
 
-var app = new AppRouter();
-Backbone.history.start();
+        events:{
+            "click .new": "newWine"
+        },
+
+        newWine:function (event) {
+            
+            var oDetailViewContainer = document.getElementById('content');
+            var oDetailViewInfo = null;
+            var oNewWine = new WineModel();
+            
+            var oApp_DetailWineViewHTML = null; 
+
+            if (oApp.wineView) {
+                oApp.wineView.close();
+            }
+            oApp.wineView = new WineView({ model: oNewWine });
+
+            oApp_DetailWineViewHTML = oApp.wineView.render().el;
+            $(oDetailViewContainer).html( oApp_DetailWineViewHTML );
+
+        }
+    });
+
+    // ###WineAppRouter
+    // Entry points of our app    
+    // instance: `new WineAppRouter();`
+    WineAppRouter = Backbone.Router.extend({
+
+        // `wineList` *Collection* of wines
+        wineList : null, 
+        // `wineListView` *View* with the list of wines
+        wineListView : null, 
+
+        // `wine` *Model* representing an unique wWine
+        wine : null, 
+        // `wineView` *View* with the details of the wine
+        wineView : null, 
+
+        // we set what to do in our app URL's
+        routes:{
+            // at `http:\\our_app_url\` we call to `this.list` method 
+            // and show the list of wines
+            "": "list",
+            
+            // for example at `http:\\our_app_url\#wines\3` we call to `this.wineDetails` method
+            // and show the details of wine with id=3
+            "wines/:id": "wineDetails"
+        },
+
+        initialize: function(options) {
+
+            this.showHeader();
+
+            this.wineList = new WineCollection();
+            
+
+        },
+
+        showHeader: function () {
+
+            var oHeader = document.getElementById('header');
+            var oHeaderHTML = new HeaderView().render().el;
+
+            $(oHeader).html(oHeaderHTML);
+        },
+
+        list: function () {
+
+            var oListSidebar = document.getElementById('sidebar');
+            var oListSidebarContent = null;
+
+            this.wineListView = new WineListView({ model:this.wineList });
+            oListSidebarContent = this.wineListView.render().el;
+            this.wineList.fetch();
+
+            $(oListSidebar).html( oListSidebarContent );
+        },
+
+        wineDetails: function (id) {
+
+            var oDetailViewContainer = document.getElementById('content');
+            var oDetailViewInfo = null;
+            var oApp_DetailWineView = oApp.wineView;
+
+            this.wine = this.wineList.get(id);
+            this.wineView = new WineView({ model:this.wine });
+
+            if (oApp_DetailWineView) {
+                oApp_DetailWineView.close();
+            }
+
+            oDetailViewInfo = this.wineView.render().el;
+            $(oDetailViewContainer).html( oDetailViewInfo );
+        }
+    });
+
+    var oApp = new WineAppRouter();
+    Backbone.history.start();
+
+    return oApp;
+
+})()

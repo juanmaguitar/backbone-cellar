@@ -1,0 +1,322 @@
+<!DOCTYPE html>  <html> <head>   <title>main.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               main.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">WineApp</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">(){</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>oApp will contain the whole App that we'll return to WineApp</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">oApp</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    
+    <span class="kd">var</span> <span class="nx">WineModel</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span> 
+    <span class="kd">var</span> <span class="nx">WineCollection</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span> 
+
+    <span class="kd">var</span> <span class="nx">WineListView</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">WineListItemView</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">WineView</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">WineHeaderView</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+    <span class="kd">var</span> <span class="nx">WineAppRouter</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>We can use more intuitive characters like <code>{{ }}</code> for 
+<a href="http://japhr.blogspot.com/2011/10/underscorejs-templates-in-backbonejs.html">underscrore js templates in backbone</a> </p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">_</span><span class="p">.</span><span class="nx">templateSettings</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">interpolate</span> <span class="o">:</span> <span class="sr">/\{\{([\s\S]+?)\}\}/g</span>
+    <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>WineModel</h3>
+
+<p>Model Definition. Represents a Wine </p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">WineModel</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>RESTful service endpoint to retrieve or persist Model data. 
+Note that this attribute is only needed when retrieving/persisting Models 
+that are not part of a Collection. If the Model is part of a Collection, 
+the url attribute defined in the Collection is enough for Backbone.js to 
+know how to retrieve, update, or delete data using your RESTful API.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">urlRoot</span><span class="o">:</span> <span class="s2">&quot;http://projects/BACKBONE/backbone-cellar/api/wines&quot;</span><span class="p">,</span>
+        <span class="nx">defaults</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;grapes&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;country&quot;</span><span class="o">:</span> <span class="s2">&quot;USA&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;region&quot;</span><span class="o">:</span> <span class="s2">&quot;California&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;year&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;picture&quot;</span><span class="o">:</span> <span class="s2">&quot;Reserva.jpg&quot;</span>
+        <span class="p">}</span>
+    <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3>WineCollection</h3>
+
+<p>Collection of <code>WineModel</code>. Represents the list of wines</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">WineCollection</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+        <span class="nx">model</span><span class="o">:</span> <span class="nx">WineModel</span><span class="p">,</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>set the RESTful service API url</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;http://projects/BACKBONE/backbone-cellar/api/wines&quot;</span>
+    <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h3>WineListView</h3>
+
+<p>Wine List (UL) <br />
+instance: `new WineListView({ model:this.wineList })     </p>
+
+<p><img src="img/UL_WineListView.jpg" alt="HTML code generated" title="List of Wines" /></p>             </td>             <td class="code">               <div class="highlight"><pre>      
+    <span class="nx">WineListView</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+
+        <span class="nx">tagName</span><span class="o">:</span><span class="s1">&#39;ul&#39;</span><span class="p">,</span>
+
+        <span class="nx">initialize</span><span class="o">:</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+            <span class="nx">_</span><span class="p">.</span><span class="nx">bindAll</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">&#39;render&#39;</span><span class="p">,</span> <span class="s1">&#39;addWine&#39;</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s2">&quot;reset&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">render</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">addWine</span><span class="p">)</span> 
+        <span class="p">},</span>
+
+        <span class="nx">addWine</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">wine</span><span class="p">)</span> <span class="p">{</span>
+            
+            <span class="kd">var</span> <span class="nx">oViewItemWine</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WineListItemView</span><span class="p">({</span> <span class="nx">model</span><span class="o">:</span><span class="nx">wine</span> <span class="p">});</span>
+            <span class="kd">var</span> <span class="nx">oViewItemWineHTML</span> <span class="o">=</span> <span class="nx">oViewItemWine</span><span class="p">.</span><span class="nx">render</span><span class="p">().</span><span class="nx">el</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">oElementBase</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">;</span>
+
+            <span class="nx">$</span><span class="p">(</span><span class="nx">oElementBase</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">oViewItemWineHTML</span><span class="p">);</span>
+
+        <span class="p">},</span>
+
+        <span class="nx">render</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">eventName</span><span class="p">)</span> <span class="p">{</span>
+        
+            <span class="kd">var</span> <span class="nx">oCollection</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">models</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p><code>oElementBase</code> tagName 'UL' that will be created on the fly</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="kd">var</span> <span class="nx">oElementBase</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">el</span> 
+            <span class="kd">var</span> <span class="nx">oViewCurrentWine</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span> 
+            </pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>For each element of the collection (wine)
+i create a LI with the info and append it to the UL</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">oCollection</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">wine</span><span class="p">)</span> <span class="p">{</span>
+            </pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p><code>oViewCurrentWine</code> a view of this current wine</p>             </td>             <td class="code">               <div class="highlight"><pre>                <span class="nx">oViewCurrentWine</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WineListItemView</span><span class="p">({</span> <span class="nx">model</span><span class="o">:</span><span class="nx">wine</span> <span class="p">});</span>
+                </pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p><code>oCurrentWineElement</code> a DOM element (LI) of this current wine</p>             </td>             <td class="code">               <div class="highlight"><pre>                <span class="nx">oCurrentWineElement</span> <span class="o">=</span> <span class="nx">oViewCurrentWine</span><span class="p">.</span><span class="nx">render</span><span class="p">().</span><span class="nx">el</span><span class="p">;</span>
+                </pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>append LI's to UL</p>             </td>             <td class="code">               <div class="highlight"><pre>                <span class="nx">$</span><span class="p">(</span><span class="nx">oElementBase</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span> <span class="nx">oCurrentWineElement</span> <span class="p">);</span>
+                
+            <span class="p">},</span> <span class="k">this</span><span class="p">);</span>
+            </pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>return <code>this</code> so this method can be chained</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <h3>WineListItemView</h3>
+
+<p>Wine Element (LI) of the list <br />
+instance: <code>new WineListItemView({ model:wine })</code></p>
+
+<p><img src="img/LI_WineListItemView.jpg" alt="HTML code generated" title="Item in the List of Wines" /></p>             </td>             <td class="code">               <div class="highlight"><pre>     
+    <span class="kd">var</span> <span class="nx">WineListItemView</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+
+        <span class="nx">tagName</span><span class="o">:</span><span class="s2">&quot;li&quot;</span><span class="p">,</span>
+
+        <span class="nx">template</span><span class="o">:</span><span class="nx">_</span><span class="p">.</span><span class="nx">template</span><span class="p">(</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#tpl-wine-list-item&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">()</span> <span class="p">),</span>
+
+        <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">_</span><span class="p">.</span><span class="nx">bindAll</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">&#39;render&#39;</span><span class="p">,</span> <span class="s1">&#39;close&#39;</span><span class="p">,</span> <span class="s2">&quot;markSelection&quot;</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s2">&quot;change&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">render</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s2">&quot;destroy&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">close</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s2">&quot;change:selected&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">markSelection</span><span class="p">);</span>
+        <span class="p">},</span>
+
+        <span class="nx">events</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;click a&quot;</span><span class="o">:</span> <span class="s2">&quot;setSelection&quot;</span>
+        <span class="p">},</span>
+
+        <span class="nx">setSelection</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+            <span class="kd">var</span> <span class="nx">aCollection</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">models</span><span class="p">;</span>
+
+            <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">aCollection</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">wine</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">wine</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span> <span class="nx">selected</span><span class="o">:</span><span class="kc">false</span> <span class="p">});</span>
+            <span class="p">});</span>
+
+            <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span> <span class="nx">selected</span><span class="o">:</span><span class="kc">true</span> <span class="p">});</span>
+                       
+        <span class="p">},</span>
+
+        <span class="nx">markSelection</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">wine</span><span class="p">,</span> <span class="nx">selected</span><span class="p">)</span> <span class="p">{</span>
+
+            <span class="kd">var</span> <span class="nx">oElement</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">sClassSelected</span> <span class="o">=</span> <span class="nx">selected</span> <span class="o">?</span> <span class="s2">&quot;selected&quot;</span> <span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+
+            <span class="nx">$</span><span class="p">(</span><span class="nx">oElement</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span><span class="nx">sClassSelected</span><span class="p">);</span>
+        <span class="p">},</span>
+
+        <span class="nx">render</span><span class="o">:</span><span class="kd">function</span> <span class="p">(</span><span class="nx">eventName</span><span class="p">)</span> <span class="p">{</span>
+        
+            <span class="kd">var</span> <span class="nx">oJsonWineData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">();</span>
+            <span class="kd">var</span> <span class="nx">sHtmlTemplate</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">template</span><span class="p">(</span><span class="nx">oJsonWineData</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p><code>oElementBase</code> tagName 'LI' that will be created on the fly</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="kd">var</span> <span class="nx">oElementBase</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">el</span> 
+            
+            <span class="nx">$</span><span class="p">(</span><span class="nx">oElementBase</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">sHtmlTemplate</span><span class="p">);</span>
+            
+            <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+        <span class="p">},</span>
+
+        <span class="nx">close</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            </pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>`this.el here represents a DOM selection of the LI</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="kd">var</span> <span class="nx">oElement</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">;</span>
+            </pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>unbind of all events attached to this LI (this.events)</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="nx">$</span><span class="p">(</span><span class="nx">oElement</span><span class="p">).</span><span class="nx">unbind</span><span class="p">();</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>remove the element (from the list)</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="nx">$</span><span class="p">(</span><span class="nx">oElement</span><span class="p">).</span><span class="nx">remove</span><span class="p">();</span>
+
+        <span class="p">}</span>
+
+    <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <h3>WineItemDetails</h3>
+
+<p>Show Data of every wine through <code>tpl-wine-details</code> template <br />
+instance: <code>new WineListItemView({ model:wine });</code></p>
+
+<p><img src="img/DIV_WineItemDetails.jpg" alt="HTML code generated" title="Details of Wine" /></p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">WineView</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+
+        <span class="nx">template</span><span class="o">:</span><span class="nx">_</span><span class="p">.</span><span class="nx">template</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#tpl-wine-details&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">()),</span>
+
+        <span class="nx">initialize</span><span class="o">:</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s2">&quot;change&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">render</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+        <span class="p">},</span>
+    
+        <span class="nx">events</span><span class="o">:</span><span class="p">{</span>
+            <span class="s2">&quot;change input&quot;</span><span class="o">:</span> <span class="s2">&quot;change&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;click .save&quot;</span><span class="o">:</span> <span class="s2">&quot;saveWine&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;click .delete&quot;</span><span class="o">:</span> <span class="s2">&quot;deleteWine&quot;</span>
+        <span class="p">},</span>
+
+        <span class="nx">render</span><span class="o">:</span><span class="kd">function</span> <span class="p">(</span><span class="nx">eventName</span><span class="p">)</span> <span class="p">{</span>
+
+            <span class="kd">var</span> <span class="nx">oJsonWineData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">();</span>
+            <span class="kd">var</span> <span class="nx">sHtmlTemplate</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">template</span><span class="p">(</span> <span class="nx">oJsonWineData</span> <span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">oElementBase</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">;</span>
+
+            <span class="nx">$</span><span class="p">(</span><span class="nx">oElementBase</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">sHtmlTemplate</span><span class="p">);</span>
+
+            <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+        <span class="p">},</span>
+
+        <span class="nx">change</span><span class="o">:</span><span class="kd">function</span> <span class="p">(</span> <span class="nx">eEvent</span><span class="p">)</span> <span class="p">{</span>
+
+            <span class="kd">var</span> <span class="nx">oInput</span> <span class="o">=</span> <span class="nx">eEvent</span><span class="p">.</span><span class="nx">target</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>You could change your model on the spot, like this: <br />
+<code>var change = {};</code> <br />
+<code>change[target.name] = target.value</code>; <br />
+<code>this.model.set(change);</code>    </p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;changing &#39;</span> <span class="o">+</span> <span class="nx">oInput</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39; from: &#39;</span> <span class="o">+</span> <span class="nx">oInput</span><span class="p">.</span><span class="nx">defaultValue</span> <span class="o">+</span> <span class="s1">&#39; to: &#39;</span> <span class="o">+</span> <span class="nx">oInput</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+
+        <span class="p">},</span>
+
+        <span class="nx">saveWine</span><span class="o">:</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+            <span class="kd">var</span> <span class="nx">bIsNew</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">oAppCollection</span> <span class="o">=</span> <span class="nx">oApp</span><span class="p">.</span><span class="nx">wineList</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">oCurrentModel</span>  <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">;</span>
+
+            <span class="nx">oCurrentModel</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span>
+                <span class="nx">name</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#name&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(),</span>
+                <span class="nx">grapes</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#grapes&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(),</span>
+                <span class="nx">country</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#country&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(),</span>
+                <span class="nx">region</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#region&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(),</span>
+                <span class="nx">year</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#year&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(),</span>
+                <span class="nx">description</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#description&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+            <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>We can check if the model has been saved to the server with 
+<a href="http://documentcloud.github.com/backbone/#Model-isNew">model.isNew()</a> </p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="nx">bIsNew</span> <span class="o">=</span> <span class="nx">oCurrentModel</span><span class="p">.</span><span class="nx">isNew</span><span class="p">();</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>With this method we can SAVE new wines or UPDATE existing ones</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="k">if</span> <span class="p">(</span><span class="nx">bIsNew</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>Add this model (wine) to the collection created in App</p>             </td>             <td class="code">               <div class="highlight"><pre>                <span class="nx">oAppCollection</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span> <span class="p">);</span>
+            <span class="p">}</span> 
+            <span class="k">else</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>Update current model (this.model)</p>             </td>             <td class="code">               <div class="highlight"><pre>                <span class="nx">oCurrentModel</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">},</span>
+
+        <span class="nx">deleteWine</span><span class="o">:</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+            <span class="kd">var</span> <span class="nx">oCurrentModel</span>  <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">;</span>
+
+            <span class="nx">oCurrentModel</span><span class="p">.</span><span class="nx">destroy</span><span class="p">({</span>
+                <span class="nx">success</span><span class="o">:</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Wine deleted successfully&#39;</span><span class="p">);</span>
+                    <span class="nb">window</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">back</span><span class="p">();</span>
+                <span class="p">}</span>
+            <span class="p">});</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">},</span>
+
+        <span class="nx">close</span><span class="o">:</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>this.el here represents a DOM selection of the DIV
+showing the details of wine</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="kd">var</span> <span class="nx">oElement</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">;</span>
+            </pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>unbind of all events attached</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="nx">$</span><span class="p">(</span><span class="nx">oElement</span><span class="p">).</span><span class="nx">unbind</span><span class="p">();</span></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>clean the content of the element</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="nx">$</span><span class="p">(</span><span class="nx">oElement</span><span class="p">).</span><span class="nx">empty</span><span class="p">();</span>
+            
+        <span class="p">}</span>
+
+    <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <h3>WineItemDetails</h3>
+
+<p>Show Data of every wine through <code>tpl-wine-details</code> template <br />
+instance: <code>new WineListItemView({ model:wine });</code></p>
+
+<p><img src="img/DIV_WineItemDetails.jpg" alt="HTML code generated" title="Details of Wine" /></p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">HeaderView</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+
+        <span class="nx">template</span><span class="o">:</span><span class="nx">_</span><span class="p">.</span><span class="nx">template</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#tpl-header&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">()),</span>
+
+        <span class="nx">initialize</span><span class="o">:</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+        <span class="p">},</span>
+
+        <span class="nx">render</span><span class="o">:</span><span class="kd">function</span> <span class="p">(</span><span class="nx">eventName</span><span class="p">)</span> <span class="p">{</span>
+
+            <span class="kd">var</span> <span class="nx">sHtmlTemplate</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">template</span><span class="p">();</span>
+            <span class="kd">var</span> <span class="nx">oElementBase</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">;</span>
+
+            <span class="nx">$</span><span class="p">(</span><span class="nx">oElementBase</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">sHtmlTemplate</span><span class="p">);</span>
+
+            <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+
+        <span class="p">},</span>
+
+        <span class="nx">events</span><span class="o">:</span><span class="p">{</span>
+            <span class="s2">&quot;click .new&quot;</span><span class="o">:</span> <span class="s2">&quot;newWine&quot;</span>
+        <span class="p">},</span>
+
+        <span class="nx">newWine</span><span class="o">:</span><span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+            
+            <span class="kd">var</span> <span class="nx">oDetailViewContainer</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">oDetailViewInfo</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">oNewWine</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WineModel</span><span class="p">();</span>
+            
+            <span class="kd">var</span> <span class="nx">oApp_DetailWineViewHTML</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span> 
+
+            <span class="k">if</span> <span class="p">(</span><span class="nx">oApp</span><span class="p">.</span><span class="nx">wineView</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">oApp</span><span class="p">.</span><span class="nx">wineView</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="nx">oApp</span><span class="p">.</span><span class="nx">wineView</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WineView</span><span class="p">({</span> <span class="nx">model</span><span class="o">:</span> <span class="nx">oNewWine</span> <span class="p">});</span>
+
+            <span class="nx">oApp_DetailWineViewHTML</span> <span class="o">=</span> <span class="nx">oApp</span><span class="p">.</span><span class="nx">wineView</span><span class="p">.</span><span class="nx">render</span><span class="p">().</span><span class="nx">el</span><span class="p">;</span>
+            <span class="nx">$</span><span class="p">(</span><span class="nx">oDetailViewContainer</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span> <span class="nx">oApp_DetailWineViewHTML</span> <span class="p">);</span>
+
+        <span class="p">}</span>
+    <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <h3>WineAppRouter</h3>
+
+<p>Entry points of our app <br />
+instance: <code>new WineAppRouter();</code></p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">WineAppRouter</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Router</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p><code>wineList</code> <em>Collection</em> of wines</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">wineList</span> <span class="o">:</span> <span class="kc">null</span><span class="p">,</span> </pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <p><code>wineListView</code> <em>View</em> with the list of wines</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">wineListView</span> <span class="o">:</span> <span class="kc">null</span><span class="p">,</span> </pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <p><code>wine</code> <em>Model</em> representing an unique wWine</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">wine</span> <span class="o">:</span> <span class="kc">null</span><span class="p">,</span> </pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <p><code>wineView</code> <em>View</em> with the details of the wine</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">wineView</span> <span class="o">:</span> <span class="kc">null</span><span class="p">,</span> </pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <p>we set what to do in our app URL's</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">routes</span><span class="o">:</span><span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <p>at <code>http:\\our_app_url\</code> we call to <code>this.list</code> method 
+and show the list of wines</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="s2">&quot;&quot;</span><span class="o">:</span> <span class="s2">&quot;list&quot;</span><span class="p">,</span>
+            </pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <p>for example at <code>http:\\our_app_url\#wines\3</code> we call to <code>this.wineDetails</code> method
+and show the details of wine with id=3</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="s2">&quot;wines/:id&quot;</span><span class="o">:</span> <span class="s2">&quot;wineDetails&quot;</span>
+        <span class="p">},</span>
+
+        <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+
+            <span class="k">this</span><span class="p">.</span><span class="nx">showHeader</span><span class="p">();</span>
+
+            <span class="k">this</span><span class="p">.</span><span class="nx">wineList</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WineCollection</span><span class="p">();</span>
+            
+
+        <span class="p">},</span>
+
+        <span class="nx">showHeader</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+            <span class="kd">var</span> <span class="nx">oHeader</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;header&#39;</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">oHeaderHTML</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HeaderView</span><span class="p">().</span><span class="nx">render</span><span class="p">().</span><span class="nx">el</span><span class="p">;</span>
+
+            <span class="nx">$</span><span class="p">(</span><span class="nx">oHeader</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">oHeaderHTML</span><span class="p">);</span>
+        <span class="p">},</span>
+
+        <span class="nx">list</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+            <span class="kd">var</span> <span class="nx">oListSidebar</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;sidebar&#39;</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">oListSidebarContent</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+            <span class="k">this</span><span class="p">.</span><span class="nx">wineListView</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WineListView</span><span class="p">({</span> <span class="nx">model</span><span class="o">:</span><span class="k">this</span><span class="p">.</span><span class="nx">wineList</span> <span class="p">});</span>
+            <span class="nx">oListSidebarContent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">wineListView</span><span class="p">.</span><span class="nx">render</span><span class="p">().</span><span class="nx">el</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">wineList</span><span class="p">.</span><span class="nx">fetch</span><span class="p">();</span>
+
+            <span class="nx">$</span><span class="p">(</span><span class="nx">oListSidebar</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span> <span class="nx">oListSidebarContent</span> <span class="p">);</span>
+        <span class="p">},</span>
+
+        <span class="nx">wineDetails</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+
+            <span class="kd">var</span> <span class="nx">oDetailViewContainer</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">oDetailViewInfo</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">oApp_DetailWineView</span> <span class="o">=</span> <span class="nx">oApp</span><span class="p">.</span><span class="nx">wineView</span><span class="p">;</span>
+
+            <span class="k">this</span><span class="p">.</span><span class="nx">wine</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">wineList</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">wineView</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WineView</span><span class="p">({</span> <span class="nx">model</span><span class="o">:</span><span class="k">this</span><span class="p">.</span><span class="nx">wine</span> <span class="p">});</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="nx">oApp_DetailWineView</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">oApp_DetailWineView</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="nx">oDetailViewInfo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">wineView</span><span class="p">.</span><span class="nx">render</span><span class="p">().</span><span class="nx">el</span><span class="p">;</span>
+            <span class="nx">$</span><span class="p">(</span><span class="nx">oDetailViewContainer</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span> <span class="nx">oDetailViewInfo</span> <span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="kd">var</span> <span class="nx">oApp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WineAppRouter</span><span class="p">();</span>
+    <span class="nx">Backbone</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nx">oApp</span><span class="p">;</span>
+
+<span class="p">})()</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

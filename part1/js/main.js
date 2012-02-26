@@ -205,8 +205,8 @@ var WineApp = (function(){
         }
     });
 
-    var App = new WineAppRouter();
+    var oApp = new WineAppRouter();
     Backbone.history.start();
 
-    return App;
+    return oApp;
 })()
